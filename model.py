@@ -26,15 +26,15 @@ from os import path
 # Загружаем тренировочные и тестовые данные
 
 
-Подключаемся к своему google диску
+# Подключаемся к своему google диску
 
 drive.mount('/content/drive')
 
-Загружаем данные с диска в локальные файлы
+# Загружаем данные с диска в локальные файлы
 
 !cp -r ./drive/MyDrive/data_c/public_attach.zip ./public_attach.zip
 
-Распаковываем данные
+# Распаковываем данные
 
 !unzip ./public_attach.zip
 
@@ -42,17 +42,17 @@ drive.mount('/content/drive')
 !unzip ./public_attach/profile.zip
 !unzip ./public_attach/test.zip
 
-Создаём папку train и перемещаем в неё тренировочные данные
+# Создаём папку train и перемещаем в неё тренировочные данные
 
 !mkdir ./train
 !mv ./enface ./train/enface
 !mv ./profile ./train/profile
 
-Если нужно полностью удалить какую-то папку, то используем !rm -rf
+# Если нужно полностью удалить какую-то папку, то используем !rm -rf
 
 # !rm -rf ./sample_data
 
-Загрузка данных с dropbox (или ещё откуда-то, если открыть доступ)
+# Загрузка данных с dropbox (или ещё откуда-то, если открыть доступ)
 
 # !wget https://www.dropbox.com/s/wajkanzja6py6n1/test.zip?dl=0 -O test_data.zip
 
@@ -72,12 +72,12 @@ validation_dataset = image_dataset_from_directory('train',
                                              batch_size=128,
                                              image_size=(128, 128))
 
-Смотрим названия классов
+# Смотрим названия классов
 
 class_names = train_dataset.class_names
 class_names
 
-Смотрим примеры данных из каждого датасета
+# Смотрим примеры данных из каждого датасета
 
 plt.figure(figsize=(10, 10))
 for images, labels in train_dataset.take(1):
@@ -87,7 +87,7 @@ for images, labels in train_dataset.take(1):
     plt.title(class_names[labels[i]])
     plt.axis("off")
 
-Делаем AUTOTUNE на все датасеты
+# Делаем AUTOTUNE на все датасеты
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
@@ -96,17 +96,17 @@ validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
 
 # Создаём нейросеть
 
-Выбираем предобученную сеть
+# Выбираем предобученную сеть
 
 effficient_net = EfficientNetV2S(weights='imagenet', 
                                  include_top=False, 
                                  input_shape=(128, 128, 3))
 
-Делаем так, чтобы сама предобученная сеть не обучалась ещё раз
+# Делаем так, чтобы сама предобученная сеть не обучалась ещё раз
 
 effficient_net.trainable = False
 
-Создаём свёрточные слои сети
+# Создаём свёрточные слои сети
 
 model = Sequential()
 model.add(Normalization())
@@ -130,7 +130,7 @@ model = Model(inputs=effficient_net.input, outputs=predictions)
 Работает хуже
 '''
 
-Компилируем модель
+# Компилируем модель
 
 model.compile(loss='binary_crossentropy',
               optimizer="RMSProp",
@@ -147,7 +147,7 @@ history = model.fit(train_dataset,
                     validation_data=validation_dataset,
                     epochs=4)
 
-Смотрим графики точности и ошибки
+# Смотрим графики точности и ошибки
 
 plt.plot(history.history['accuracy'], 
          label='Доля верных ответов на обучающем наборе')
@@ -202,7 +202,7 @@ for p in pred:
   img_resized_list = []
 print(names[0], predictions[0])
 
-Переводим предсказания в целые числа
+# Переводим предсказания в целые числа
 
 answer = []
 for i in predictions:
@@ -212,25 +212,25 @@ for i in predictions:
     answer.append(1)
 answer
 
-Убираем пробелы из начала названий картинок
+# Убираем пробелы из начала названий картинок
 
 filenames = [] # итоговые названия файлов
 for i in names:
   filenames.append(i[1:])
 filenames
 
-Сверяем длины обоих списков
+# Сверяем длины обоих списков
 
 print(len(filenames))
 print(len(answer))
 
-Переводим ответы в DataFrame
+# Переводим ответы в DataFrame
 
 d = {'filename': filenames, 'label': answer}
 df = pd.DataFrame(data=d)
 df
 
-Сортируем df по возрастанию номеров картинок
+# Сортируем df по возрастанию номеров картинок
 
 sort_val = [] # столбец с номерами нартинов в числовом формате 
 for i in df['filename']:
@@ -240,7 +240,7 @@ df
 
 df.sort_values('sort_val')
 
-Но вообще, можно ничего и не сортировать. Всё равно оказалось, что файл скачивается несортированный
+# Но вообще, можно ничего и не сортировать. Всё равно оказалось, что файл скачивается несортированный
 
 # Создаём файл с ответами и скачиваем его
 
