@@ -1,0 +1,25 @@
+# Подключаем библиотеки
+
+import os
+import csv
+import numpy as np
+import tensorflow as tf
+import pandas as pd
+from tensorflow.keras.applications import EfficientNetV2S
+# from tensorflow.keras.applications import EfficientNetV2L
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.layers import Dropout, GlobalAveragePooling2D
+from tensorflow.keras.layers.experimental.preprocessing import Normalization
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import utils
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.utils import image_dataset_from_directory
+import cv2
+import matplotlib.pyplot as plt
+from google.colab import files
+from google.colab import drive
+from os import listdir
+from os import path
+%matplotlib inline 
+
